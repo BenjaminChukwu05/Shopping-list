@@ -1,6 +1,7 @@
 const itemForm = document.getElementById('item-form');
 const itemInput = document.getElementById('item-input');
 const itemList = document.getElementById('item-list');
+const clearBtn = document.getElementById('clear');
 
 // -------The Function Method--------
 // function addItem(e) {
@@ -44,7 +45,7 @@ const addItem = (e) => {
 const createButton = (classes) => {
   const button = document.createElement('button');
   button.className = classes;
-  const icon = createIcon('fa-solid fa-mark');
+  const icon = createIcon('fa-solid fa-xmark');
   button.appendChild(icon);
   return button;
 };
@@ -56,5 +57,28 @@ const createIcon = (classes) => {
   return icon;
 };
 
+// Using Event Delegation, we tranversed the DOM from the i
+// to the button and from there to the list item, we also
+// used ".classList.contains" to check if the item we are
+// has that className and if the condition is true then delete
+const removeItem = (e) => {
+  if (e.target.parentElement.classList.contains('remove-item')) {
+    e.target.parentElement.parentElement.remove();
+  }
+};
+
+// To clear the Whole list
+const clearItems = (e) => {
+//   //   There are 2 methods, First method
+//   itemList.innerHTML = '';
+
+//   Second and more efficient method
+    while (itemList.firstChild) {
+        itemList.removeChild(itemList.firstChild);
+    }
+};
+
 // Event Listeners
 itemForm.addEventListener('submit', addItem);
+itemList.addEventListener('click', removeItem);
+clearBtn.addEventListener('click', clearItems);
