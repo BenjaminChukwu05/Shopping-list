@@ -2,6 +2,7 @@ const itemForm = document.getElementById('item-form');
 const itemInput = document.getElementById('item-input');
 const itemList = document.getElementById('item-list');
 const clearBtn = document.getElementById('clear');
+const itemFilter = document.getElementById('filter');
 
 // -------The Function Method--------
 // function addItem(e) {
@@ -35,7 +36,10 @@ const addItem = (e) => {
   const button = createButton('remove-item btn-link text-red');
   li.appendChild(button);
 
+  //   Add li to the DOM
   itemList.appendChild(li);
+
+  checkUI();
 
   //   This Clears the Input after Clicking
   itemInput.value = '';
@@ -63,22 +67,43 @@ const createIcon = (classes) => {
 // has that className and if the condition is true then delete
 const removeItem = (e) => {
   if (e.target.parentElement.classList.contains('remove-item')) {
-    e.target.parentElement.parentElement.remove();
+    if (confirm('Are you sure?')) {
+      e.target.parentElement.parentElement.remove();
+
+      checkUI();
+    }
   }
 };
 
 // To clear the Whole list
 const clearItems = (e) => {
-//   //   There are 2 methods, First method
-//   itemList.innerHTML = '';
+  //   //   There are 2 methods, First method
+  //   itemList.innerHTML = '';
 
-//   Second and more efficient method
-    while (itemList.firstChild) {
-        itemList.removeChild(itemList.firstChild);
-    }
+  //   Second and more efficient method
+  while (itemList.firstChild) {
+    itemList.removeChild(itemList.firstChild);
+  }
+
+  checkUI();
+};
+
+const checkUI = () => {
+  const items = itemList.querySelectorAll('li');
+  //   console.log(items); to check the precesnce of the nodeList
+
+  if (items.length === 0) {
+    clearBtn.style.display = 'none';
+    itemFilter.style.display = 'none';
+  } else {
+    clearBtn.style.display = 'block';
+    itemFilter.style.display = 'block';
+  }
 };
 
 // Event Listeners
 itemForm.addEventListener('submit', addItem);
 itemList.addEventListener('click', removeItem);
 clearBtn.addEventListener('click', clearItems);
+
+checkUI();
