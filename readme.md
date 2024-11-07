@@ -108,9 +108,9 @@ Note:
 7. Add localStorage to persist items
 
 Note:
-I wanted to be able to add items not= just to the DOM but also the the local storage and also the remove them, I also need to load the items when the page loads, we want to fatch them from local storage
+- I wanted to be able to add items not= just to the DOM but also the the local storage and also the remove them, I also need to load the items when the page loads, we want to fatch them from local storage
 
-We can only add strings to the localStorage so what we are going to do it add an array of the items and then stringify them with `json.stringify` method, then when we take it out we use the `json.parse` method and that will turn it back into an array
+- We can only add strings to the localStorage so what we are going to do it add an array of the items and then stringify them with `json.stringify` method, then when we take it out we use the `json.parse` method and that will turn it back into an array
 
     ```javascript
     // Adding to Local Storage
@@ -131,7 +131,8 @@ We can only add strings to the localStorage so what we are going to do it add an
     };
     ```
 
-Note: Because we wanted to both do `Input Validation`, `Create the Item DOM`, `Add to local Storage`, and `Check UI` all at once I created or rather re-made a seperate function to so all these at once and the created individual functions for each of these tasks and called them in this multi-purpose function
+Note: 
+- Because we wanted to both do `Input Validation`, `Create the Item DOM`, `Add to local Storage`, and `Check UI` all at once I created or rather re-made a seperate function to so all these at once and the created individual functions for each of these tasks and called them in this multi-purpose function
 
     ```javascript
     //Multi-purpose Funtion
@@ -162,9 +163,9 @@ Note: Because we wanted to both do `Input Validation`, `Create the Item DOM`, `A
 8. Now to make sure that even when I reload the page the items are still displayed
 
 Note:
-I did a couple things here, but to break things down created an eventListener for when the page loads `DOMContentLoaded` and passed in function `displayItems`.
+- I did a couple things here, but to break things down created an eventListener for when the page loads `DOMContentLoaded` and passed in function `displayItems`.
 
-Then we run `getItemsFromStorage` in a variable `itemsFromStorage`, basically making the variable and array, then we loop through with `forEach()` (for every item in `itemsFromStorage` we add them to the DOM using `addItemToDOM`), we also have to `checkUI` again after all these unless the filter and clear all button won't show when we reload
+- Then we run `getItemsFromStorage` in a variable `itemsFromStorage`, basically making the variable and array, then we loop through with `forEach()` (for every item in `itemsFromStorage` we add them to the DOM using `addItemToDOM`), we also have to `checkUI` again after all these unless the filter and clear all button won't show when we reload
 
     ```javascript
     //It's goo practise to put this at the top of the page
@@ -177,7 +178,7 @@ Then we run `getItemsFromStorage` in a variable `itemsFromStorage`, basically ma
     ```
 
 Note:
-Instead of leaving all the `eventListeners` in the Global Scope, we create a function `init()` and then we put everything inside and call the function outside at the end
+- Instead of leaving all the `eventListeners` in the Global Scope, we create a function `init()` and then we put everything inside and call the function outside at the end
 
     ```javascript
     // Initailize App
