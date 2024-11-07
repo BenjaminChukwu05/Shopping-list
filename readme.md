@@ -159,7 +159,7 @@ Note: Because we wanted to both do `Input Validation`, `Create the Item DOM`, `A
     };
     ```
 
-7. Now to make sure that even when I reload the page the items are still displayed
+8. Now to make sure that even when I reload the page the items are still displayed
 
 Note:
 I did a couple things here, but to break things down created an eventListener for when the page loads `DOMContentLoaded` and passed in function `displayItems`.
