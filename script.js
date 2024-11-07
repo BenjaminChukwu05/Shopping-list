@@ -18,7 +18,7 @@ const itemFilter = document.getElementById('filter');
 // }
 
 // ---------Used an Arrow function instead----------
-const addItem = (e) => {
+const onAddItemSubmit = (e) => {
   e.preventDefault();
 
   const newItem = itemInput.value;
@@ -29,20 +29,44 @@ const addItem = (e) => {
     return;
   }
 
+  //   Create item DOM element
+  addItemToDOM(newItem);
+
+  //   Add item to localStorage
+  addItemToStorage(newItem);
+
+  checkUI();
+
+  //   This Clears the Input after Clicking
+  itemInput.value = '';
+};
+
+const addItemToDOM = (item) => {
   //   Create List item
   const li = document.createElement('li');
-  li.appendChild(document.createTextNode(newItem));
+  li.appendChild(document.createTextNode(item));
 
   const button = createButton('remove-item btn-link text-red');
   li.appendChild(button);
 
   //   Add li to the DOM
   itemList.appendChild(li);
+};
 
-  checkUI();
+const addItemToStorage = (item) => {
+  let itemsFromStorage;
 
-  //   This Clears the Input after Clicking
-  itemInput.value = '';
+  if (localStorage.getItem('item') === null) {
+    itemsFromStorage = [];
+  } else {
+    itemsFromStorage = JSON.parse(localStorage.getItem('items'));
+  }
+
+  //   Add new Item to array
+  itemsFromStorage.push(item);
+
+  //   Convert to JSON string and set to localStorage
+  localStorage.setItem('items', JSON.stringify(itemsFromStorage));
 };
 
 // Reusable Button
@@ -100,7 +124,7 @@ const filterItems = (e) => {
 
     // if it mathces an item it will be true, if it doesn;t it will display '-1'
     if (itemName.indexOf(text) != -1) {
-        // the items in the have the display 'flex'
+      // the items in the have the display 'flex'
       item.style.display = 'flex';
     } else {
       item.style.display = 'none';
@@ -123,7 +147,7 @@ const checkUI = () => {
 };
 
 // Event Listeners
-itemForm.addEventListener('submit', addItem);
+itemForm.addEventListener('submit', onAddItemSubmit);
 itemList.addEventListener('click', removeItem);
 clearBtn.addEventListener('click', clearItems);
 itemFilter.addEventListener('input', filterItems);

@@ -104,3 +104,61 @@ Note:
     });
   };
   ```
+
+7. Add localStorage to persist items
+
+Note:
+I wanted to be able to add items not= just to the DOM but also the the local storage and also the remove them, I also need to load the items when the page loads, we want to fatch them from local storage
+
+We can only add strings to the localStorage so what we are going to do it add an array of the items and then stringify them with `json.stringify` method, then when we take it out we use the `json.parse` method and that will turn it back into an array
+
+    ```javascript
+    // Adding to Local Storage
+    const addItemToStorage = (item) => {
+        let itemsFromStorage;
+
+        if (localStorage.getItem('item') === null) {
+            itemsFromStorage = [];
+        } else {
+            itemsFromStorage = JSON.parse(localStorage.getItem('items'));
+        }
+
+        //   Add new Item to array
+        itemsFromStorage.push(item);
+
+        //   Convert to JSON string and set to localStorage
+        localStorage.setItem('items', JSON.stringify(itemsFromStorage));
+    };
+    ```
+
+Note: Because we wanted to both do `Input Validation`, `Create the Item DOM`, `Add to local Storage`, and `Check UI` all at once I created or rather re-made a seperate function to so all these at once and the created individual functions for each of these tasks and called them in this multi-purpose function
+
+    ```javascript
+    //Multi-purpose Funtion
+    const onAddItemSubmit = (e) => {
+    e.preventDefault();
+
+    const newItem = itemInput.value;
+
+    //   Input Validation (Basic)
+    if (newItem === '') {
+        alert('Please input an item');
+        return;
+    }
+
+    //   Create item DOM element
+    addItemToDOM(newItem);
+
+    //   Add item to localStorage
+    addItemToStorage(newItem);
+
+    checkUI();
+
+    //   This Clears the Input after Clicking
+    itemInput.value = '';
+    };
+    ```
+
+
+
+
