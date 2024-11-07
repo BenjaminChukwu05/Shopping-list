@@ -88,6 +88,27 @@ const clearItems = (e) => {
   checkUI();
 };
 
+// To Filter items by typing
+const filterItems = (e) => {
+  const items = itemList.querySelectorAll('li');
+  const text = e.target.value.toLowerCase();
+
+  items.forEach((item) => {
+    // Gettign the First childNode, which is a text
+    // Instead of looping through it with the quotation marks showing, we loop through the text instead using (.textContent)
+    const itemName = item.firstChild.textContent.toLowerCase();
+
+    // if it mathces an item it will be true, if it doesn;t it will display '-1'
+    if (itemName.indexOf(text) != -1) {
+        // the items in the have the display 'flex'
+      item.style.display = 'flex';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+};
+
+// To change UI state according to presence of items
 const checkUI = () => {
   const items = itemList.querySelectorAll('li');
   //   console.log(items); to check the precesnce of the nodeList
@@ -105,5 +126,6 @@ const checkUI = () => {
 itemForm.addEventListener('submit', addItem);
 itemList.addEventListener('click', removeItem);
 clearBtn.addEventListener('click', clearItems);
+itemFilter.addEventListener('input', filterItems);
 
 checkUI();
