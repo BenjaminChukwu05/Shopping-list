@@ -4,18 +4,14 @@ const itemList = document.getElementById('item-list');
 const clearBtn = document.getElementById('clear');
 const itemFilter = document.getElementById('filter');
 
-// -------The Function Method--------
-// function addItem(e) {
-//   e.preventDefault();
+// Putting it here is good practise, since we run once
+// the page loads
+const displayItems = () => {
+  const itemsFromStorage = getItemsFromStorage();
+  itemsFromStorage.forEach((item) => addItemToDOM(item));
 
-//   // Input Validation
-//   if (itemInput.value === '') {
-//     alert('Please input an item');
-//     return;
-//   }
-
-//   console.log('Success');
-// }
+  checkUI();
+};
 
 // ---------Used an Arrow function instead----------
 const onAddItemSubmit = (e) => {
@@ -53,22 +49,6 @@ const addItemToDOM = (item) => {
   itemList.appendChild(li);
 };
 
-const addItemToStorage = (item) => {
-  let itemsFromStorage;
-
-  if (localStorage.getItem('item') === null) {
-    itemsFromStorage = [];
-  } else {
-    itemsFromStorage = JSON.parse(localStorage.getItem('items'));
-  }
-
-  //   Add new Item to array
-  itemsFromStorage.push(item);
-
-  //   Convert to JSON string and set to localStorage
-  localStorage.setItem('items', JSON.stringify(itemsFromStorage));
-};
-
 // Reusable Button
 const createButton = (classes) => {
   const button = document.createElement('button');
@@ -83,6 +63,31 @@ const createIcon = (classes) => {
   const icon = document.createElement('i');
   icon.className = classes;
   return icon;
+};
+
+const addItemToStorage = (item) => {
+  //We don't want to repeat ourselves, instead of doing thing from
+  //   'getItemFromStorage', why not just call it
+  const itemsFromStorage = getItemsFromStorage();
+
+  //   Add new Item to array
+  itemsFromStorage.push(item);
+
+  //   Convert to JSON string and set to localStorage
+  localStorage.setItem('items', JSON.stringify(itemsFromStorage));
+};
+
+const getItemsFromStorage = () => {
+  let itemsFromStorage;
+
+  if (localStorage.getItem('items') === null) {
+    itemsFromStorage = [];
+  } else {
+    itemsFromStorage = JSON.parse(localStorage.getItem('items'));
+  }
+  // We called this in other functions, it wouldn't work unless
+  // we returned it and every thing we did in this function
+  return itemsFromStorage;
 };
 
 // Using Event Delegation, we tranversed the DOM from the i
@@ -146,10 +151,17 @@ const checkUI = () => {
   }
 };
 
-// Event Listeners
-itemForm.addEventListener('submit', onAddItemSubmit);
-itemList.addEventListener('click', removeItem);
-clearBtn.addEventListener('click', clearItems);
-itemFilter.addEventListener('input', filterItems);
+// Initailize App
+const init = () => {
+  // Event Listeners
+  itemForm.addEventListener('submit', onAddItemSubmit);
+  itemList.addEventListener('click', removeItem);
+  clearBtn.addEventListener('click', clearItems);
+  itemFilter.addEventListener('input', filterItems);
+  // To display items even when page is loaded
+  document.addEventListener('DOMContentLoaded', displayItems);
 
-checkUI();
+  checkUI();
+};
+
+init();

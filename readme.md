@@ -159,6 +159,38 @@ Note: Because we wanted to both do `Input Validation`, `Create the Item DOM`, `A
     };
     ```
 
+7. Now to make sure that even when I reload the page the items are still displayed
 
+Note:
+I did a couple things here, but to break things down created an eventListener for when the page loads `DOMContentLoaded` and passed in function `displayItems`.
 
+Then we run `getItemsFromStorage` in a variable `itemsFromStorage`, basically making the variable and array, then we loop through with `forEach()` (for every item in `itemsFromStorage` we add them to the DOM using `addItemToDOM`), we also have to `checkUI` again after all these unless the filter and clear all button won't show when we reload
 
+    ```javascript
+    //It's goo practise to put this at the top of the page
+    const displayItems = () => {
+        const itemsFromStorage = getItemsFromStorage();
+        itemsFromStorage.forEach((item) => addItemToDOM(item));
+
+        checkUI();
+    };
+    ```
+
+Note:
+Instead of leaving all the `eventListeners` in the Global Scope, we create a function `init()` and then we put everything inside and call the function outside at the end
+
+    ```javascript
+    // Initailize App
+    const init = () => {
+        // Event Listeners
+        itemForm.addEventListener('submit', onAddItemSubmit);
+        itemList.addEventListener('click', removeItem);
+        clearBtn.addEventListener('click', clearItems);
+        itemFilter.addEventListener('input', filterItems);
+        // To display items even when page is loaded
+        document.addEventListener('DOMContentLoaded', displayItems);
+
+        checkUI();
+    };
+
+    init();
