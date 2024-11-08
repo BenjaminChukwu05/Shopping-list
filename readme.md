@@ -267,3 +267,54 @@ Note:
   ```
 
 - Be sure to use `let` for `itemFromStorage` since we will be changing it, and we'll also do this for the `clear all` button
+
+10. Click on an item to put into `edit mode` and add to form
+
+Note:
+
+- I first set a glocalVariable `isEditMode` and set it to false by default (Why though?, I'll get to that)
+
+- In `onClickItem` underneath the if statement, where we check if we specifically clicked the button, we set an else for when we click anywhere else on that element and call a function `setItemToEdit` where we pass in the element `e.target`
+
+  ```javascript
+  const onClickItem = (e) => {
+    if (e.target.parentElement.classList.contains('remove-item')) {
+      removeItem(e.target.parentElement.parentElement);
+    } else {
+      setItemToEdit(e.target);
+    }
+  };
+  ```
+
+- We create the function we called and here we set `isEditMode` to true and if it is, we want to change the collor of the text to make it lighter and we did this by creating a new css class called `edit-mode`
+
+  ```javascript
+  const setItemToEdit = (item) => {
+    isEditMode = true;
+    item.classList.add('edit-mode');
+  };
+  ```
+
+- Then we want to select the button in the global scope (using `querySelector` to go into itemForm and select the button), we want to change the `innerHTML` of it, (the icon and the text)
+
+  ```javascript
+  const setItemToEdit = (item) => {
+    isEditMode = true;
+    item.classList.add('edit-mode');
+    formBtn.innerHTML = '<i class="fa-solid fa-pen"></i> Update Item';
+  };
+  ```
+
+- We also want to add the item text content into the form so we can edit it
+
+  ```javascript
+  itemInput.value = item.textContent;
+  ```
+
+- Also when we click another item the last item remians how it is and we don't want that, to change this we loop through the itemList and remove the css element `edit-mode`
+
+  ```javascript
+  itemList
+    .querySelectorAll('li')
+    .forEach((i) => i.classList.remove('edit-mode'));
+  ```
