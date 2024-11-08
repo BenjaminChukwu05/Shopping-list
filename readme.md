@@ -108,43 +108,45 @@ Note:
 7. Add localStorage to persist items
 
 Note:
+
 - I wanted to be able to add items not= just to the DOM but also the the local storage and also the remove them, I also need to load the items when the page loads, we want to fatch them from local storage
 
 - We can only add strings to the localStorage so what we are going to do it add an array of the items and then stringify them with `json.stringify` method, then when we take it out we use the `json.parse` method and that will turn it back into an array
 
-    ```javascript
-    // Adding to Local Storage
-    const addItemToStorage = (item) => {
-        let itemsFromStorage;
+  ```javascript
+  // Adding to Local Storage
+  const addItemToStorage = (item) => {
+    let itemsFromStorage;
 
-        if (localStorage.getItem('item') === null) {
-            itemsFromStorage = [];
-        } else {
-            itemsFromStorage = JSON.parse(localStorage.getItem('items'));
-        }
+    if (localStorage.getItem('item') === null) {
+      itemsFromStorage = [];
+    } else {
+      itemsFromStorage = JSON.parse(localStorage.getItem('items'));
+    }
 
-        //   Add new Item to array
-        itemsFromStorage.push(item);
+    //   Add new Item to array
+    itemsFromStorage.push(item);
 
-        //   Convert to JSON string and set to localStorage
-        localStorage.setItem('items', JSON.stringify(itemsFromStorage));
-    };
-    ```
+    //   Convert to JSON string and set to localStorage
+    localStorage.setItem('items', JSON.stringify(itemsFromStorage));
+  };
+  ```
 
-Note: 
+Note:
+
 - Because we wanted to both do `Input Validation`, `Create the Item DOM`, `Add to local Storage`, and `Check UI` all at once I created or rather re-made a seperate function to so all these at once and the created individual functions for each of these tasks and called them in this multi-purpose function
 
-    ```javascript
-    //Multi-purpose Funtion
-    const onAddItemSubmit = (e) => {
+  ```javascript
+  //Multi-purpose Funtion
+  const onAddItemSubmit = (e) => {
     e.preventDefault();
 
     const newItem = itemInput.value;
 
     //   Input Validation (Basic)
     if (newItem === '') {
-        alert('Please input an item');
-        return;
+      alert('Please input an item');
+      return;
     }
 
     //   Create item DOM element
@@ -157,41 +159,111 @@ Note:
 
     //   This Clears the Input after Clicking
     itemInput.value = '';
-    };
-    ```
+  };
+  ```
 
 8. Now to make sure that even when I reload the page the items are still displayed
 
 Note:
+
 - I did a couple things here, but to break things down created an eventListener for when the page loads `DOMContentLoaded` and passed in function `displayItems`.
 
 - Then we run `getItemsFromStorage` in a variable `itemsFromStorage`, basically making the variable and array, then we loop through with `forEach()` (for every item in `itemsFromStorage` we add them to the DOM using `addItemToDOM`), we also have to `checkUI` again after all these unless the filter and clear all button won't show when we reload
 
-    ```javascript
-    //It's goo practise to put this at the top of the page
-    const displayItems = () => {
-        const itemsFromStorage = getItemsFromStorage();
-        itemsFromStorage.forEach((item) => addItemToDOM(item));
+  ```javascript
+  //It's goo practise to put this at the top of the page
+  const displayItems = () => {
+    const itemsFromStorage = getItemsFromStorage();
+    itemsFromStorage.forEach((item) => addItemToDOM(item));
 
-        checkUI();
-    };
-    ```
+    checkUI();
+  };
+  ```
 
 Note:
+
 - Instead of leaving all the `eventListeners` in the Global Scope, we create a function `init()` and then we put everything inside and call the function outside at the end
 
-    ```javascript
-    // Initailize App
-    const init = () => {
-        // Event Listeners
-        itemForm.addEventListener('submit', onAddItemSubmit);
-        itemList.addEventListener('click', removeItem);
-        clearBtn.addEventListener('click', clearItems);
-        itemFilter.addEventListener('input', filterItems);
-        // To display items even when page is loaded
-        document.addEventListener('DOMContentLoaded', displayItems);
+  ```javascript
+  // Initailize App
+  const init = () => {
+    // Event Listeners
+    itemForm.addEventListener('submit', onAddItemSubmit);
+    itemList.addEventListener('click', removeItem);
+    clearBtn.addEventListener('click', clearItems);
+    itemFilter.addEventListener('input', filterItems);
+    // To display items even when page is loaded
+    document.addEventListener('DOMContentLoaded', displayItems);
 
-        checkUI();
-    };
+    checkUI();
+  };
 
-    init();
+  init();
+  ```
+
+9. Now we want to be able to remove items from localStorage and not just the DOM
+
+Note:
+
+- After this we want to be able to click a part of the item to edit it and also on the icon to remove it
+
+- We are changing `removeItem` in the Event listener to `onClickItem` and then we would call the former function inside it
+
+  ```javascript
+  itemList.addEventListener('click', onClickItem);
+  ```
+
+- Then in the `onClickItem`, I set a condition saying that if the button in the element is clicked then run `removeItem` with the target passed into it
+
+  ```javascript
+  const onClickItem = (e) => {
+    if (e.target.parentElement.classList.contains('remove-item')) {
+      removeItem(e.target.parentElement.parentElement);
+    }
+  };
+  ```
+
+- Then in `removeItem` I set a windows property `confirm` to confirm if i really want to delete the item and if i do, then delete, and of course at the end of it run `checkUI`
+
+  ```javascript
+  const removeItem = (item) => {
+    if (confirm('Are you sure')) {
+      item.remove();
+
+      checkUI();
+    }
+  };
+  ```
+
+- I only removed the item from the DOM, if i reloaded the page it would appear again as it is stored in localStorage, we will remove it inside the same function, calling in another function `removeItemFromStorage`
+
+  ```javascript
+  const removeItem = (item) => {
+    if (confirm('Are you sure')) {
+      // Remove item from DOM
+      item.remove();
+
+      // Remove item from storage
+      removeItemFromStorage(item.textContent);
+
+      checkUI();
+    }
+  };
+  ```
+
+- Basically in this new function, what we're doing is, calling all the items from localStorage and then filtering them to clear out the ones we do not want to delete and them using `JSON.stringify` to turn them back to string to keep back in localStorage, since `getItemsFromStorage` turned them to an array
+
+  ```javascript
+  const removeItemFromStorage = (item) => {
+    // We want to get the item from storage
+    let itemsFromStorage = getItemsFromStorage();
+
+    //Filter out item to be removed
+    itemsFromStorage = itemsFromStorage.filter((i) => i !== item);
+
+    //Re-set to localStorage
+    localStorage.setItem('items', JSON.stringify(itemsFromStorage));
+  };
+  ```
+
+- Be sure to use `let` for `itemFromStorage` since we will be changing it, and we'll also do this for the `clear all` button

@@ -90,29 +90,46 @@ const getItemsFromStorage = () => {
   return itemsFromStorage;
 };
 
-// Using Event Delegation, we tranversed the DOM from the i
-// to the button and from there to the list item, we also
-// used ".classList.contains" to check if the item we are
-// has that className and if the condition is true then delete
-const removeItem = (e) => {
+// This takes in to functions, to both edit and delete the items
+const onClickItem = (e) => {
   if (e.target.parentElement.classList.contains('remove-item')) {
-    if (confirm('Are you sure?')) {
-      e.target.parentElement.parentElement.remove();
-
-      checkUI();
-    }
+    removeItem(e.target.parentElement.parentElement);
   }
+};
+
+// Here we add a confirmation and then simply remove it
+const removeItem = (item) => {
+  if (confirm('Are you sure')) {
+    // Remove item from DOM
+    item.remove();
+
+    // Remove item from storage
+    removeItemFromStorage(item.textContent);
+
+    checkUI();
+  }
+};
+
+const removeItemFromStorage = (item) => {
+  // We want to get the item from storage
+  let itemsFromStorage = getItemsFromStorage();
+
+  //Filter out item to be removed
+  itemsFromStorage = itemsFromStorage.filter((i) => i !== item);
+
+  //Re-set to localStorage
+  localStorage.setItem('items', JSON.stringify(itemsFromStorage));
 };
 
 // To clear the Whole list
 const clearItems = (e) => {
-  //   //   There are 2 methods, First method
-  //   itemList.innerHTML = '';
-
   //   Second and more efficient method
   while (itemList.firstChild) {
     itemList.removeChild(itemList.firstChild);
   }
+
+  //   Clear from localStorage
+  localStorage.removeItem('items');
 
   checkUI();
 };
@@ -155,7 +172,7 @@ const checkUI = () => {
 const init = () => {
   // Event Listeners
   itemForm.addEventListener('submit', onAddItemSubmit);
-  itemList.addEventListener('click', removeItem);
+  itemList.addEventListener('click', onClickItem);
   clearBtn.addEventListener('click', clearItems);
   itemFilter.addEventListener('input', filterItems);
   // To display items even when page is loaded
