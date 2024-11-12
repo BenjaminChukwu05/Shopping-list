@@ -318,3 +318,37 @@ Note:
     .querySelectorAll('li')
     .forEach((i) => i.classList.remove('edit-mode'));
   ```
+
+11. Update and Rest State
+
+Note:
+
+- When we submit we want to check if we are in `Edit mode` and then after we edit, we remove the old one and put in the new one
+
+- We set an `if` condition, wehreby if the the item is in `Edit-mode` the code inside will run
+
+  ```javascript
+  if (isEditMode) {
+    const itemToEdit = itemList.querySelector('.edit-mode');
+
+    removeItemFromStorage(itemToEdit.textContent);
+    itemToEdit.classList.remove('edit-mode');
+    itemToEdit.remove();
+    isEditMode = false;
+  }
+  ```
+
+  Note: This code selects the item carrying the class of `edit-mode` and removes item's text `string` from localStorage and then removes the class from the item in the DOM, then removes the item from the DOM itslef and then sets `isEditMode` flase, shoing that the item is no longer in edit mode
+
+- Then I go to the `checkUI` function and then change the innerHTML of the `button` and it's style
+
+  ```javascript
+  formBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Item';
+  formBtn.style.backgroundColor = '#333';
+  ```
+
+- I then cleared the input after each UI checking
+
+  `itemInput.value = '';`
+
+  

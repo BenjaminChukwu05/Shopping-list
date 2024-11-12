@@ -27,6 +27,16 @@ const onAddItemSubmit = (e) => {
     return;
   }
 
+  //   Check for edit mode
+  if (isEditMode) {
+    const itemToEdit = itemList.querySelector('.edit-mode');
+
+    removeItemFromStorage(itemToEdit.textContent);
+    itemToEdit.classList.remove('edit-mode');
+    itemToEdit.remove();
+    isEditMode = false;
+  }
+
   //   Create item DOM element
   addItemToDOM(newItem);
 
@@ -173,6 +183,8 @@ const filterItems = (e) => {
 
 // To change UI state according to presence of items
 const checkUI = () => {
+  // Clear the Input when UI is reset
+  itemInput.value = '';
   const items = itemList.querySelectorAll('li');
   //   console.log(items); to check the precesnce of the nodeList
 
@@ -183,6 +195,11 @@ const checkUI = () => {
     clearBtn.style.display = 'block';
     itemFilter.style.display = 'block';
   }
+
+  formBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Item';
+  formBtn.style.backgroundColor = '#333';
+
+  isEditMode = false;
 };
 
 // Initailize App
