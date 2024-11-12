@@ -351,4 +351,29 @@ Note:
 
   `itemInput.value = '';`
 
+12. Prevent Duplicate Items
+
+Note:
+
+- I ran `getItemsFromStorage` which gets all the items from storage and I used an if condition to filter trhough them to see if the item we are inputing already exists using the `.includes()` method, which gives a boolean output
+
+- We then use this fucntion `checkIfItemExists` in our Submit after we have checked whether or not the item is in edit mode
+
+  ```javascript
+  const checkIfItemExists = (item) => {
+    const itemsFromStorage = getItemsFromStorage();
+    return itemsFromStorage.includes(item);
+  };
+  ```
+
+- And if the item already exists we gove an alert telling us that is already exists, after the `if` statement of `isEditMode`
+
+  ```javascript
+  else {
+  if (checkIfItemExists(newItem)) {
+    alert('This item already exists');
+    return;
+  }
+  }
+  ```
   
